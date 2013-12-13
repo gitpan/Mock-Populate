@@ -17,6 +17,8 @@ is @x, 10, 'stats_distrib';
 is @x, 10, 'shuffler';
 @x = Mock::Populate::stringer();
 is @x, 10, 'stringer';
+@x = Mock::Populate::imager();
+is @x, 10, 'imager';
 @x = Mock::Populate::collate(\@d, \@t);
 is @x, 10, 'collate';
 

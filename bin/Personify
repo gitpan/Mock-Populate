@@ -52,7 +52,7 @@ bin/Personify - Generate a set of random person names. (Default: US)
 
 =head1 VERSION
 
-version 0.04
+version 0.05
 
 =head1 AUTHOR
 

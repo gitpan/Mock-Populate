@@ -5,7 +5,7 @@ BEGIN {
 
 # ABSTRACT: Mock data creation
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use strict;
 use warnings;
@@ -13,6 +13,7 @@ use warnings;
 use Data::SimplePassword;
 use Date::Range;
 use Date::Simple qw(date today);
+use Image::Dot;
 use List::Util qw(shuffle);
 use Mock::Person;
 use Statistics::Distributions;
@@ -255,6 +256,7 @@ sub stringer {
         digit   => [ 0..9 ],
         binary  => [ 0, 1 ],
         morse   => [ qw(. -) ],
+        hex     => [ 0..9, 'a'..'f' ],
     };
     # Set the chars based on the given type.
     $sp->chars( @{ $chars->{$type} } );
@@ -265,6 +267,22 @@ sub stringer {
     # Roll!
     for(0 .. $n) {
         push @results, $sp->make_password($length);
+    }
+
+    return @results;
+}
+
+
+sub imager {
+    # Get the number of data points desired.
+    my $n = defined $_[0] ? shift : 9;
+
+    # Declare a bucket for our results.
+    my @results = ();
+
+    # Generate images.
+    for (0 .. $n) {
+        push @results, dot_PNG_RGB(0, 0, 0);
     }
 
     return @results;
@@ -304,7 +322,7 @@ Mock::Populate - Mock data creation
 
 =head1 VERSION
 
-version 0.04
+version 0.05
 
 =head1 SYNOPSIS
 
@@ -317,6 +335,7 @@ version 0.04
   @stats  = Mock::Populate::stats_distrib('u', 4, 2, 1000);
   @shuff  = Mock::Populate::shuffler(1000, qw(foo bar baz goo ber buz));
   @string = Mock::Populate::stringer(32, 'base64', 1000);
+  @imgs   = Mock::Populate::imager(1000);
   @collated = Mock::Populate::collate(
     \@ids, \@dates, \@times, \@nums, \@people, \@stats, \@shuff, \@string);
 
@@ -401,7 +420,7 @@ The defaults are:
   degrees-of-freedom: 2
   n: 10
 
-=head3 TYPES
+=head3 Types
 
 This function uses single letter identifiers:
 
@@ -410,7 +429,7 @@ This function uses single letter identifiers:
   s: Student's T distribution
   f: F distribution
 
-=head3 DEGREES OF FREEDOM
+=head3 Degrees of freedom
 
 Given the type, this function accepts the following:
 
@@ -449,12 +468,23 @@ C<rndpassword> program, but allows you to generate a finite number of results.
   ascii     n:.T<Gr!,e*[k=eu  # visible ascii (a.k.a. spaghetti)
   base64    PC2gb5/8+fBDuw+d  # 0..9 a..z A..Z /+
   simple    xek4imbjcmctsxd3  # 0..9 a..z
+  hex       89504e470d0a1a0a  # 0..9, 'a'..'f'
   alpha     femvifzscyvvlwvn  # a..z
   digit     7563919623282657  # 0..9
   binary    1001011110000101
   morse     -.--...-.--.-..-
 
+=head2 imager()
+
+  @results = imager($size, $n)
+
+Return a list of B<$n> images.  The number of data-points is optional. Default:
+
+  n: 10
+
 =head2 collate()
+
+  @rows = collate(@columns)
 
 Return a list of lists representing a 2D table of rows, given the lists
 provided, with each member added to a row, respectively.

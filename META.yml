@@ -21,6 +21,7 @@ requires:
   Data::SimplePassword: 0
   Date::Range: 0
   Date::Simple: 0
+  Image::Dot: 0
   List::Util: 0
   Mock::Person: 0
   Statistics::Distributions: 0
@@ -29,7 +30,10 @@ requires:
   perl: 5.006
   strict: 0
   warnings: 0
-version: 0.04
+resources:
+  bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Mock-Populate
+  repository: git://github.com/ology/mock-populate.git
+version: 0.05
 x_Dist_Zilla:
   perl:
     version: 5.010000
@@ -229,6 +233,10 @@ x_Dist_Zilla:
       class: Dist::Zilla::Plugin::MetaJSON
       name: MetaJSON
       version: 5.006
+    -
+      class: Dist::Zilla::Plugin::AutoMetaResources
+      name: AutoMetaResources
+      version: 1.20
     -
       class: Dist::Zilla::Plugin::Test::PodSpelling
       name: Test::PodSpelling
