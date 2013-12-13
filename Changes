@@ -1,5 +1,8 @@
 Revision history for Mock::Polulate
 
+0.02  2013-12-13
+    - Implemented the collate() function.
+
 0.01_01 2013-12-12
     - Added functionality for all bin scripts.
 

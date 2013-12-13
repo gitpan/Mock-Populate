@@ -5,7 +5,7 @@ BEGIN {
 
 # ABSTRACT: Handy mock data creation
 
-our $VERSION = '0.01_01';
+our $VERSION = '0.02';
 
 use strict;
 use warnings;
@@ -41,8 +41,9 @@ sub date_ranger {
         # Get a random number of days in the range.
         $offset = int(rand $range->length);
 
-        # Save the start date plus the offest.
-        push @results, $date1 + $offset;
+        # Save the stringified start date plus the offest.
+        my $date = $date1 + $offset;
+        push @results, "$date";
     }
 
     return @results;
@@ -223,7 +224,22 @@ sub stats_distrib {
 
 
 sub collate {
-    warn "Not yet implemented\n";
+    # Accept any number of columns.
+    my @columns = @_;
+
+    # Make a copy of the columns to peel off.
+    my @lists = @columns;
+
+    # Declare the bucket for our arrayrefs.
+    my @collated = ();
+
+    # Add each list item to rows of collated.
+    for my $list (@columns) {
+        for my $i (0 .. @$list - 1) {
+            push @{ $collated[$i] }, $list->[$i];
+        }
+    }
+    return @collated;
 }
 
 1;
@@ -240,7 +256,7 @@ Mock::Populate - Handy mock data creation
 
 =head1 VERSION
 
-version 0.01_01
+version 0.02
 
 =head1 SYNOPSIS
 
@@ -348,7 +364,8 @@ Given the type, this function accepts the following:
 
 =head2 collate()
 
-This function is not yet implemented.
+Return a list of lists representing a 2D table of rows, given the lists
+provided, with each member added to a row, respectively.
 
 =head1 SEE ALSO
 
