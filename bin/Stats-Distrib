@@ -55,7 +55,7 @@ bin/Stats-Distrib - Generate random selections from various distributions
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head2 TYPES
 

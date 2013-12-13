@@ -1,5 +1,8 @@
 Revision history for Mock::Polulate
 
+0.04  2013-12-13
+    - Added the stringer() function.
+
 0.03  2013-12-13
     - Improved documentation.
     - Added the shuffler() function.

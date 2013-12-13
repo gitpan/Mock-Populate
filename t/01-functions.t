@@ -15,6 +15,8 @@ is @x, 10, 'personify';
 is @x, 10, 'stats_distrib';
 @x = Mock::Populate::shuffler();
 is @x, 10, 'shuffler';
+@x = Mock::Populate::stringer();
+is @x, 10, 'stringer';
 @x = Mock::Populate::collate(\@d, \@t);
 is @x, 10, 'collate';
 

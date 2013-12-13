@@ -5,7 +5,7 @@ BEGIN {
 
 # ABSTRACT: Mock data creation
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use strict;
 use warnings;
@@ -232,6 +232,45 @@ sub shuffler {
 }
 
 
+sub stringer {
+
+    # Get desired password length.
+    my $length = defined $_[0] ? shift : 8;
+    # Get the type of char generator to use.
+    my $type = defined $_[0] ? shift : 'default';
+    # Get the number of data points desired.
+    my $n = defined $_[0] ? shift : 9;
+
+    # Declare a pw instance.
+    my $sp = Data::SimplePassword->new;
+
+    # Declare the types (lifted directly from rndpassword).
+    my $chars = {
+        default => [ 0..9, 'a'..'z', 'A'..'Z' ],
+        ascii   => [ map { sprintf "%c", $_ } 33 .. 126 ],
+        base64  => [ 0..9, 'a'..'z', 'A'..'Z', qw(+ /) ],
+        b64     => [ 0..9, 'a'..'z', 'A'..'Z', qw(+ /) ],
+        simple  => [ 0..9, 'a'..'z' ],
+        alpha   => [ 'a'..'z' ],
+        digit   => [ 0..9 ],
+        binary  => [ 0, 1 ],
+        morse   => [ qw(. -) ],
+    };
+    # Set the chars based on the given type.
+    $sp->chars( @{ $chars->{$type} } );
+
+    # Declare a bucket for our results.
+    my @results = ();
+
+    # Roll!
+    for(0 .. $n) {
+        push @results, $sp->make_password($length);
+    }
+
+    return @results;
+}
+
+
 sub collate {
     # Accept any number of columns.
     my @columns = @_;
@@ -265,7 +304,7 @@ Mock::Populate - Mock data creation
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 
@@ -277,7 +316,9 @@ version 0.03
   @people = Mock::Populate::personify('b', 2, 'us', 1000);
   @stats  = Mock::Populate::stats_distrib('u', 4, 2, 1000);
   @shuff  = Mock::Populate::shuffler(1000, qw(foo bar baz goo ber buz));
-  @collated = Mock::Populate::collate(\@ids, \@dates, \@times, \@nums, \@people, \@stats);
+  @string = Mock::Populate::stringer(32, 'base64', 1000);
+  @collated = Mock::Populate::collate(
+    \@ids, \@dates, \@times, \@nums, \@people, \@stats, \@shuff, \@string);
 
 =head1 DESCRIPTION
 
@@ -387,6 +428,32 @@ arguments are optional.  The defaults are:
   n: 10
   items: a b c d e f g h i j
 
+=head2 stringer()
+
+  @results = stringer($n, @items)
+
+Return a shuffled list of B<$n> items.  The items and number of data-points
+arguments are optional.  The defaults are:
+
+  type: default
+  length: 8
+  n: 10
+
+* This function is nearly identical to the L<Data::SimplePassword>
+C<rndpassword> program, but allows you to generate a finite number of results.
+
+=head2 TYPES
+
+  Types     output sample
+  default   0xaVbi3O2Lz8E69s  # 0..9 a..z A..Z
+  ascii     n:.T<Gr!,e*[k=eu  # visible ascii (a.k.a. spaghetti)
+  base64    PC2gb5/8+fBDuw+d  # 0..9 a..z A..Z /+
+  simple    xek4imbjcmctsxd3  # 0..9 a..z
+  alpha     femvifzscyvvlwvn  # a..z
+  digit     7563919623282657  # 0..9
+  binary    1001011110000101
+  morse     -.--...-.--.-..-
+
 =head2 collate()
 
 Return a list of lists representing a 2D table of rows, given the lists
@@ -407,6 +474,8 @@ L<Mock::Person>
 L<Statistics::Distributions>
 
 L<Time::Local>
+
+L<Data::Random> does nearly the exact same thing. Whoops!
 
 =head1 AUTHOR
 
