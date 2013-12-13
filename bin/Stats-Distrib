@@ -1,0 +1,84 @@
+#!/usr/bin/perl
+# ABSTRACT: Generate random selections from various distributions
+# PODNAME: bin/Stats-Distrib
+
+use strict;
+use warnings;
+
+use Statistics::Distributions;
+
+# Get digits of precision.
+my $t = defined $ARGV[0] ? shift : die "Usage: perl $0 type [prec] [deg-of-freedm] [num]\n";
+# Get type of distribution.
+my $p = defined $ARGV[0] ? shift : 2;
+# Get desired degrees of freedom for the ChiSq, StudentT & F.
+my $d = defined $ARGV[0] ? shift : 2;
+# Get desired number of data-points.
+my $n = defined $ARGV[0] ? shift : 9;
+
+# Separate numerator/denominator for F degs-of-freedm.
+my $e = 1;
+($d, $e) = split(/\//, $d) if $t eq 'f';
+
+# Roll!
+for(0 .. $n) {
+    my $x = 0;
+    # Select distribution.
+    if ($t eq 'c') {
+        # Chi-squared
+        $x = Statistics::Distributions::chisqrdistr($d, rand);
+    }
+    elsif ($t eq 's') {
+        # Student's T
+        $x = Statistics::Distributions::tdistr($d, rand);
+    }
+    elsif ($t eq 'f') {
+        # F distribution
+        $x = Statistics::Distributions::fdistr($d, $e, rand);
+    }
+    else {
+        # Normal
+        $x = Statistics::Distributions::udistr(rand);
+    }
+    printf "%.*f\n", $p, $x;
+}
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+bin/Stats-Distrib - Generate random selections from various distributions
+
+=head1 VERSION
+
+version 0.01_01
+
+=head2 TYPES
+
+  u: Normal distribution (default)
+  c: Chi-squared distribution
+  s: Student's T distribution
+  f: F distribution
+
+=head2 DEGREES OF FREEDOM
+
+  c: A single integer
+  s: A single integer
+  f: A fraction string of the form 'N/D'
+
+=head1 AUTHOR
+
+Gene Boggs <gene@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Gene Boggs.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

@@ -1,0 +1,81 @@
+#!/usr/bin/perl
+# ABSTRACT: Generate a range of HH:MM:SS random times
+# PODNAME: bin/Time-Ranger
+
+use strict;
+use warnings;
+
+use Time::Local;
+
+# Do we want output in HH::MM:SS stamp or "seconds since unix epoc?"
+my $stamp = defined $ARGV[0]
+    ? shift
+    : die "Usage: perl $0 stamp HH:MM:SS [HH:MM:SS]\n";
+# Get start and end times.
+my $start = shift || '00:00:00';
+my $end   = shift || '';
+# Set the desired number of data-points.
+my $n     = shift || 9;
+
+# Split the :-separated times.
+my @start = split ':', $start;
+my @end   = $end ? split(':', $end) : now();
+#warn "S->E: @start -> @end\n";
+
+# Compute the number of seconds between start and end.
+my $start_time = timegm(@start[2, 1, 0], (localtime(time))[3, 4, 5]);
+my $end_time   = timegm(@end[2, 1, 0], (localtime(time))[3, 4, 5]);
+my $range = $end_time - $start_time;
+#warn "R: $end_time (@end) - $start_time (@start) = $range\n";
+
+# Declare the number of seconds.
+my $offset = 0;
+
+# Generate a time, N times.
+for(0 .. $n) {
+    # Get a random number of seconds in the range.
+    $offset = int(rand $range);
+
+    # Print the start time plus the offest seconds.
+    if ($stamp) {
+        # In HH:MM::SS format.
+        my $time = scalar localtime($start_time + $offset);
+        print +(split / /, $time)[3];
+    }
+    else {
+        # As a number of seconds from the "epoc."
+        print $start_time + $offset;
+    }
+    print "\n";
+}
+
+sub now { # Return hour, minute, second.
+    return (localtime(time))[2, 1, 0];
+}
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+bin/Time-Ranger - Generate a range of HH:MM:SS random times
+
+=head1 VERSION
+
+version 0.01_01
+
+=head1 AUTHOR
+
+Gene Boggs <gene@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Gene Boggs.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
