@@ -1,5 +1,9 @@
 Revision history for Mock::Polulate
 
+0.03  2013-12-13
+    - Improved documentation.
+    - Added the shuffler() function.
+
 0.02  2013-12-13
     - Implemented the collate() function.
 

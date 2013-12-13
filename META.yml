@@ -1,5 +1,5 @@
 ---
-abstract: 'Handy mock data creation'
+abstract: 'Mock data creation'
 author:
   - 'Gene Boggs <gene@cpan.org>'
 build_requires:
@@ -29,7 +29,7 @@ requires:
   perl: 5.006
   strict: 0
   warnings: 0
-version: 0.02
+version: 0.03
 x_Dist_Zilla:
   perl:
     version: 5.010000

@@ -3,9 +3,9 @@ BEGIN {
   $Mock::Populate::AUTHORITY = 'cpan:GENE';
 }
 
-# ABSTRACT: Handy mock data creation
+# ABSTRACT: Mock data creation
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use strict;
 use warnings;
@@ -223,6 +223,15 @@ sub stats_distrib {
 }
 
 
+sub shuffler {
+    # Get the desired number of data-points.
+    my $n = defined $_[0] ? shift : 9;
+    # Get the items to shuffle.
+    my @items = @_ ? @_ : ('a' .. 'j');
+    return shuffle(@items);
+}
+
+
 sub collate {
     # Accept any number of columns.
     my @columns = @_;
@@ -252,30 +261,36 @@ __END__
 
 =head1 NAME
 
-Mock::Populate - Handy mock data creation
+Mock::Populate - Mock data creation
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
-  > perl Date-Ranger 1900-01-01 2020-12-31 1000 > dates.dat
-  > perl Time-Ranger '01:02:03' '23:59:59' 1000 > times.dat
-  > perl Number-Ranger 1000 5000 2 1000 > nums.dat
-  > perl Personify b 2 1000 > people.dat
-  > perl Stats-Distrib n 3 1000 > stats.dat
-  > perl Collate dates.dat times.dat nums.dat people.dat stats.dat > mock.dat
+  use Mock::Populate;
+  @ids    = Mock::Populate::number_ranger(1, 1001, 0, 0, 1000);
+  @dates  = Mock::Populate::date_ranger('1900-01-01', '2020-12-31', 1000);
+  @times  = Mock::Populate::time_ranger(1, '01:02:03' '23:59:59', 1000);
+  @nums   = Mock::Populate::number_ranger(1000, 5000, 2, 1, 1000);
+  @people = Mock::Populate::personify('b', 2, 'us', 1000);
+  @stats  = Mock::Populate::stats_distrib('u', 4, 2, 1000);
+  @shuff  = Mock::Populate::shuffler(1000, qw(foo bar baz goo ber buz));
+  @collated = Mock::Populate::collate(\@ids, \@dates, \@times, \@nums, \@people, \@stats);
 
 =head1 DESCRIPTION
 
-This is a set of modules and scripts handy for mock data creation.
+This is a set of functions for mock data creation.
 
-See the documentation (and source) of each script for arguments and usage.
+Each function produces a list of elements that can be used as database columns.
+The handy C<collate()> function takes these columns and returns a list of
+(arrayref) rows.  This can then be processed into CSV, JSON, etc.  It can also
+be directly inserted into your favorite database, with your favorite perl ORM.
 
 =head1 NAME
 
-Mock::Populate - Handy mock data creation
+Mock::Populate - Mock data creation
 
 =head1 FUNCTIONS
 
@@ -361,6 +376,16 @@ Given the type, this function accepts the following:
   c: A single integer
   s: A single integer
   f: A fraction string of the form 'N/D' (default 2/1)
+
+=head2 shuffler()
+
+  @results = shuffler($n, @items)
+
+Return a shuffled list of B<$n> items.  The items and number of data-points
+arguments are optional.  The defaults are:
+
+  n: 10
+  items: a b c d e f g h i j
 
 =head2 collate()
 

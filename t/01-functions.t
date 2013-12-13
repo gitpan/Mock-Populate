@@ -13,6 +13,8 @@ is @x, 10, 'number_ranger';
 is @x, 10, 'personify';
 @x = Mock::Populate::stats_distrib();
 is @x, 10, 'stats_distrib';
+@x = Mock::Populate::shuffler();
+is @x, 10, 'shuffler';
 @x = Mock::Populate::collate(\@d, \@t);
 is @x, 10, 'collate';
 
