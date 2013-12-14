@@ -15,13 +15,6 @@ use Test::More 0.88;
 use Test::NoTabs;
 
 my @files = (
-    'bin/Date-Ranger',
-    'bin/Number-Ranger',
-    'bin/Passworder',
-    'bin/Personify',
-    'bin/Shuffler',
-    'bin/Stats-Distrib',
-    'bin/Time-Ranger',
     'lib/Mock/Populate.pm'
 );
 

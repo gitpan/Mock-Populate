@@ -26,14 +26,13 @@ requires:
   Mock::Person: 0
   Statistics::Distributions: 0
   Time::Local: 0
-  lib: 0
   perl: 5.006
   strict: 0
   warnings: 0
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Mock-Populate
   repository: git://github.com/ology/mock-populate.git
-version: 0.05
+version: 0.06
 x_Dist_Zilla:
   perl:
     version: 5.010000

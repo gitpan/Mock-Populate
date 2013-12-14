@@ -16,15 +16,7 @@ my %WriteMakefileArgs = (
     "ExtUtils::MakeMaker" => "6.30"
   },
   "DISTNAME" => "Mock-Populate",
-  "EXE_FILES" => [
-    "bin/Date-Ranger",
-    "bin/Number-Ranger",
-    "bin/Passworder",
-    "bin/Personify",
-    "bin/Shuffler",
-    "bin/Stats-Distrib",
-    "bin/Time-Ranger"
-  ],
+  "EXE_FILES" => [],
   "LICENSE" => "perl",
   "NAME" => "Mock::Populate",
   "PREREQ_PM" => {
@@ -36,7 +28,6 @@ my %WriteMakefileArgs = (
     "Mock::Person" => 0,
     "Statistics::Distributions" => 0,
     "Time::Local" => 0,
-    "lib" => 0,
     "strict" => 0,
     "warnings" => 0
   },
@@ -46,7 +37,7 @@ my %WriteMakefileArgs = (
     "IPC::Open3" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "0.05",
+  "VERSION" => "0.06",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -66,7 +57,6 @@ my %FallbackPrereqs = (
   "Statistics::Distributions" => 0,
   "Test::More" => 0,
   "Time::Local" => 0,
-  "lib" => 0,
   "strict" => 0,
   "warnings" => 0
 );

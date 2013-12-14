@@ -5,7 +5,7 @@ BEGIN {
 
 # ABSTRACT: Mock data creation
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use strict;
 use warnings;
@@ -274,15 +274,30 @@ sub stringer {
 
 
 sub imager {
+    # Get desired size factor.
+    my $size = defined $_[0] ? shift : 8;
     # Get the number of data points desired.
     my $n = defined $_[0] ? shift : 9;
 
     # Declare a bucket for our results.
     my @results = ();
 
-    # Generate images.
+    # Start with a 1x1 pixel image.
+    my $img = dot_PNG_RGB(0, 0, 0);
+
+    # XXX This is naive and sad:
+    # Pull-apart the image data.
+    (my $head = $img) =~ s/^(.*?IDAT).*$/$1/ms;
+    (my $tail = $img) =~ s/^.*?(IEND.*)$/$1/ms;
+    $img =~ s/^.*?IDAT(.*?)IEND.*$/$1/ms;
+
     for (0 .. $n) {
-        push @results, dot_PNG_RGB(0, 0, 0);
+        # Increase the byte size (not dimension).
+        my $i = $head . ($img x int(rand $size)) . $tail;
+        #warn "L: ",length($i), "\n";
+
+        # Save the result.
+        push @results, $i;
     }
 
     return @results;
@@ -322,20 +337,20 @@ Mock::Populate - Mock data creation
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 SYNOPSIS
 
   use Mock::Populate;
-  @ids    = Mock::Populate::number_ranger(1, 1001, 0, 0, 1000);
-  @dates  = Mock::Populate::date_ranger('1900-01-01', '2020-12-31', 1000);
-  @times  = Mock::Populate::time_ranger(1, '01:02:03' '23:59:59', 1000);
-  @nums   = Mock::Populate::number_ranger(1000, 5000, 2, 1, 1000);
-  @people = Mock::Populate::personify('b', 2, 'us', 1000);
-  @stats  = Mock::Populate::stats_distrib('u', 4, 2, 1000);
-  @shuff  = Mock::Populate::shuffler(1000, qw(foo bar baz goo ber buz));
-  @string = Mock::Populate::stringer(32, 'base64', 1000);
-  @imgs   = Mock::Populate::imager(1000);
+  @ids    = Mock::Populate::number_ranger(1, 1001, 0, 0, $n);
+  @dates  = Mock::Populate::date_ranger('1900-01-01', '2020-12-31', $n);
+  @times  = Mock::Populate::time_ranger(1, '01:02:03' '23:59:59', $n);
+  @nums   = Mock::Populate::number_ranger(1000, 5000, 2, 1, $n);
+  @people = Mock::Populate::personify('b', 2, 'us', $n);
+  @stats  = Mock::Populate::stats_distrib('u', 4, 2, $n);
+  @shuff  = Mock::Populate::shuffler($n, qw(foo bar baz goo ber buz));
+  @string = Mock::Populate::stringer(32, 'base64', $n);
+  @imgs   = Mock::Populate::imager(10, $n);
   @collated = Mock::Populate::collate(
     \@ids, \@dates, \@times, \@nums, \@people, \@stats, \@shuff, \@string);
 
@@ -461,14 +476,14 @@ arguments are optional.  The defaults are:
 * This function is nearly identical to the L<Data::SimplePassword>
 C<rndpassword> program, but allows you to generate a finite number of results.
 
-=head2 TYPES
+=head3 Types
 
   Types     output sample
   default   0xaVbi3O2Lz8E69s  # 0..9 a..z A..Z
-  ascii     n:.T<Gr!,e*[k=eu  # visible ascii (a.k.a. spaghetti)
-  base64    PC2gb5/8+fBDuw+d  # 0..9 a..z A..Z /+
+  ascii     n:.T<Gr!,e*[k=eu  # visible ascii
+  base64    PC2gb5/8+fBDuw+d  # 0..9 a..z A..Z / +
   simple    xek4imbjcmctsxd3  # 0..9 a..z
-  hex       89504e470d0a1a0a  # 0..9, 'a'..'f'
+  hex       89504e470d0a1a0a  # 0..9 a..f
   alpha     femvifzscyvvlwvn  # a..z
   digit     7563919623282657  # 0..9
   binary    1001011110000101
@@ -478,9 +493,13 @@ C<rndpassword> program, but allows you to generate a finite number of results.
 
   @results = imager($size, $n)
 
-Return a list of B<$n> images.  The number of data-points is optional. Default:
+Return a list of 1x1 pixel images of varying byte sizes (not image dimension).
+The size and number of data-points are both optional.
+
+The defaults are:
 
   n: 10
+  size: 8
 
 =head2 collate()
 
@@ -496,6 +515,8 @@ L<Data::SimplePassword>
 L<Date::Range>
 
 L<Date::Simple>
+
+L<Image::Dot>
 
 L<List::Util>
 
