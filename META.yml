@@ -33,7 +33,7 @@ requires:
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Mock-Populate
   repository: git://github.com/ology/mock-populate.git
-version: 0.07
+version: 0.0701
 x_Dist_Zilla:
   perl:
     version: 5.010000

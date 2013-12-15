@@ -5,7 +5,7 @@ BEGIN {
 
 # ABSTRACT: Mock data creation
 
-our $VERSION = '0.07';
+our $VERSION = '0.0701';
 
 use strict;
 use warnings;
@@ -200,7 +200,8 @@ sub emailify {
         $_ = unidecode($_) for @name;
 
         # Added a quasi random email for the person.
-        push @results, lc($name[0]) . '.' . lc($name[-1]) . '@example.' . $tld[rand @tld];
+        push @results, (@name > 1 ? lc($name[0]) . '.' : '')
+            . lc($name[-1]) . '@example.' . $tld[rand @tld];
     }
 
     return \@results;
@@ -363,7 +364,7 @@ Mock::Populate - Mock data creation
 
 =head1 VERSION
 
-version 0.07
+version 0.0701
 
 =head1 SYNOPSIS
 

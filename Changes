@@ -1,4 +1,7 @@
-Revision history for Mock::Polulate
+Revision history for Mock::Populate
+
+0.0701    2013-12-14 22:25:51 America/Los_Angeles
+    - Allowed single name email addresses.
 
 0.07      2013-12-14 22:12:57 America/Los_Angeles
     - Added an emailify() function based on person names.
