@@ -1,5 +1,9 @@
 Revision history for Mock::Polulate
 
+0.07      2013-12-14 22:12:57 America/Los_Angeles
+    - Added an emailify() function based on person names.
+    - Made all functions return array references rather than lists.
+
 0.06      2013-12-13 17:19:17 America/Los_Angeles
     - Made the imager() function produce random byte sizes.
 

@@ -5,7 +5,7 @@ BEGIN {
 
 # ABSTRACT: Mock data creation
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use strict;
 use warnings;
@@ -18,6 +18,7 @@ use List::Util qw(shuffle);
 use Mock::Person;
 use Statistics::Distributions;
 use Time::Local;
+use Text::Unidecode;
 
 
 sub date_ranger {
@@ -47,7 +48,7 @@ sub date_ranger {
         push @results, "$date";
     }
 
-    return @results;
+    return \@results;
 }
 
 
@@ -94,7 +95,7 @@ sub time_ranger {
         }
     }
 
-    return @results;
+    return \@results;
 }
 
 sub _now { # Return hour, minute, second.
@@ -135,7 +136,7 @@ sub number_ranger {
         @results = ($i .. $j);
     }
 
-    return @results;
+    return \@results;
 }
 
 
@@ -177,7 +178,32 @@ sub personify {
         }
     }
 
-    return @results;
+    return \@results;
+}
+
+
+sub emailify {
+    my @people = @_;
+
+    # Bucket for our results.
+    my @results = ();
+
+    # Generate email addresses if requested.
+    # first.last @example.{com,net,org,edu}
+    my @tld = qw( com net org edu );
+
+    for my $p (@people) {
+        # Break up the name.
+        my @name = split / /, $p;
+
+        # Turn any unicode characters into something ascii.
+        $_ = unidecode($_) for @name;
+
+        # Added a quasi random email for the person.
+        push @results, lc($name[0]) . '.' . lc($name[-1]) . '@example.' . $tld[rand @tld];
+    }
+
+    return \@results;
 }
 
 
@@ -220,7 +246,7 @@ sub stats_distrib {
         }
     }
 
-    return @results;
+    return \@results;
 }
 
 
@@ -229,7 +255,7 @@ sub shuffler {
     my $n = defined $_[0] ? shift : 9;
     # Get the items to shuffle.
     my @items = @_ ? @_ : ('a' .. 'j');
-    return shuffle(@items);
+    return [ shuffle(@items) ];
 }
 
 
@@ -269,7 +295,7 @@ sub stringer {
         push @results, $sp->make_password($length);
     }
 
-    return @results;
+    return \@results;
 }
 
 
@@ -300,7 +326,7 @@ sub imager {
         push @results, $i;
     }
 
-    return @results;
+    return \@results;
 }
 
 
@@ -320,7 +346,7 @@ sub collate {
             push @{ $collated[$i] }, $list->[$i];
         }
     }
-    return @collated;
+    return \@collated;
 }
 
 1;
@@ -337,22 +363,22 @@ Mock::Populate - Mock data creation
 
 =head1 VERSION
 
-version 0.06
+version 0.07
 
 =head1 SYNOPSIS
 
   use Mock::Populate;
-  @ids    = Mock::Populate::number_ranger(1, 1001, 0, 0, $n);
-  @dates  = Mock::Populate::date_ranger('1900-01-01', '2020-12-31', $n);
-  @times  = Mock::Populate::time_ranger(1, '01:02:03' '23:59:59', $n);
-  @nums   = Mock::Populate::number_ranger(1000, 5000, 2, 1, $n);
-  @people = Mock::Populate::personify('b', 2, 'us', $n);
-  @stats  = Mock::Populate::stats_distrib('u', 4, 2, $n);
-  @shuff  = Mock::Populate::shuffler($n, qw(foo bar baz goo ber buz));
-  @string = Mock::Populate::stringer(32, 'base64', $n);
-  @imgs   = Mock::Populate::imager(10, $n);
-  @collated = Mock::Populate::collate(
-    \@ids, \@dates, \@times, \@nums, \@people, \@stats, \@shuff, \@string);
+  $ids    = Mock::Populate::number_ranger(1, 1001, 0, 0, $n);
+  $dates  = Mock::Populate::date_ranger('1900-01-01', '2020-12-31', $n);
+  $times  = Mock::Populate::time_ranger(1, '01:02:03' '23:59:59', $n);
+  $nums   = Mock::Populate::number_ranger(1000, 5000, 2, 1, $n);
+  $people = Mock::Populate::personify('b', 2, 'us', 0, $n);
+  $email  = Mock::Populate::emailify(@$people);
+  $stats  = Mock::Populate::stats_distrib('u', 4, 2, $n);
+  $shuff  = Mock::Populate::shuffler($n, qw(foo bar baz goo ber buz));
+  $string = Mock::Populate::stringer(32, 'base64', $n);
+  $imgs   = Mock::Populate::imager(10, $n);
+  $collated = Mock::Populate::collate($people, $email, $dates, $times);
 
 =head1 DESCRIPTION
 
@@ -421,6 +447,12 @@ number of data-points arguments are all optional.  The defaults are:
   names: 2
   country: us
   n: 10
+
+=head2 emailify()
+
+  $results = emailify(@people)
+
+Return a list of B<$n> email addresses based on a list of given names.
 
 =head2 stats_distrib()
 

@@ -37,6 +37,7 @@
             "List::Util" : "0",
             "Mock::Person" : "0",
             "Statistics::Distributions" : "0",
+            "Text::Unidecode" : "0",
             "Time::Local" : "0",
             "perl" : "5.006",
             "strict" : "0",
@@ -65,7 +66,7 @@
          "web" : "https://github.com/ology/mock-populate"
       }
    },
-   "version" : "0.06",
+   "version" : "0.07",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.010000"
