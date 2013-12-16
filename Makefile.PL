@@ -27,8 +27,10 @@ my %WriteMakefileArgs = (
     "List::Util" => 0,
     "Mock::Person" => 0,
     "Statistics::Distributions" => 0,
+    "Text::Password::Pronounceable" => 0,
     "Text::Unidecode" => 0,
     "Time::Local" => 0,
+    "constant" => 0,
     "strict" => 0,
     "warnings" => 0
   },
@@ -38,7 +40,7 @@ my %WriteMakefileArgs = (
     "IPC::Open3" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "0.0701",
+  "VERSION" => "0.08",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -57,8 +59,10 @@ my %FallbackPrereqs = (
   "Mock::Person" => 0,
   "Statistics::Distributions" => 0,
   "Test::More" => 0,
+  "Text::Password::Pronounceable" => 0,
   "Text::Unidecode" => 0,
   "Time::Local" => 0,
+  "constant" => 0,
   "strict" => 0,
   "warnings" => 0
 );
