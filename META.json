@@ -68,7 +68,7 @@
          "web" : "https://github.com/ology/mock-populate"
       }
    },
-   "version" : "0.08",
+   "version" : "0.0801",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.010000"
