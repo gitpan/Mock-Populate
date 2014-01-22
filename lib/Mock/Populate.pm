@@ -5,12 +5,12 @@ BEGIN {
 
 # ABSTRACT: Mock data creation
 
-our $VERSION = '0.0801';
+our $VERSION = '0.09';
 
 use strict;
 use warnings;
 
-use constant NDATA => 9;
+use constant NDATA => 10;
 use constant PREC  => 2;
 use constant DOF   => 2;
 use constant SIZE  => 8;
@@ -45,7 +45,7 @@ sub date_ranger {
     # Bucket for our result list.
     my @results;
 
-    for(0 .. $args{N}) {
+    for(1 .. $args{N}) {
         # Get a random number of days in the range.
         $offset = int(rand $range->length);
 
@@ -107,7 +107,7 @@ sub time_ranger {
     my @results;
 
     # Generate a time, N times.
-    for(0 .. $args{N}) {
+    for(1 .. $args{N}) {
         # Get a random number of seconds in the range.
         $offset = int(rand $range);
 
@@ -146,7 +146,7 @@ sub number_ranger {
     # Do we want random numbers?
     if ($args{random}) {
         # Roll!
-        for(0 .. $args{N}) {
+        for(1 .. $args{N}) {
             # Get our random candidate.
             my $x = rand($args{end});
             # Make sure it is above the start value.
@@ -177,7 +177,7 @@ sub name_ranger {
     my @results;
 
     # Roll!
-    for my $i (0 .. $args{N}) {
+    for my $i (1 .. $args{N}) {
         # Get our random person.
         my $p = '';
         # If gender is 'both' alternate male-female.
@@ -249,7 +249,7 @@ sub distributor {
     my @results;
 
     # Roll!
-    for(0 .. $args{N}) {
+    for(1 .. $args{N}) {
         # Select distribution.
         if ($args{type} eq 'c') {
             # Chi-squared
@@ -313,7 +313,7 @@ sub string_ranger {
     my @results = ();
 
     # Roll!
-    for(0 .. $args{N}) {
+    for(1 .. $args{N}) {
         if ($args{type} eq 'pron') {
             push @results, Text::Password::Pronounceable->generate(
                 $args{length}, $args{length});
@@ -345,7 +345,7 @@ sub image_ranger {
     (my $tail = $img) =~ s/^.*?(IEND.*)$/$1/ms;
     $img =~ s/^.*?IDAT(.*?)IEND.*$/$1/ms;
 
-    for (0 .. $args{N}) {
+    for (1 .. $args{N}) {
         # Increase the byte size (not dimension).
         my $i = $head . ($img x int(rand $args{size})) . $tail;
         #warn "L: ",length($i), "\n";
@@ -392,7 +392,7 @@ Mock::Populate - Mock data creation
 
 =head1 VERSION
 
-version 0.0801
+version 0.09
 
 =head1 SYNOPSIS
 
@@ -615,7 +615,7 @@ L<Time::Local>
 
 L<Data::Random> does nearly the exact same thing. Whoops!
 
-=head1 TO DO
+=head1 TODO
 
 Implement dirty-data randomizing.
 
