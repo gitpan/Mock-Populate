@@ -5,7 +5,7 @@ BEGIN {
 
 # ABSTRACT: Mock data creation
 
-our $VERSION = '0.09';
+our $VERSION = '0.0901';
 
 use strict;
 use warnings;
@@ -392,7 +392,7 @@ Mock::Populate - Mock data creation
 
 =head1 VERSION
 
-version 0.09
+version 0.0901
 
 =head1 SYNOPSIS
 
@@ -422,10 +422,6 @@ Each function produces a list of elements that can be used as database columns.
 The handy C<collate()> function takes these columns and returns a list of
 (arrayref) rows.  This can then be processed into CSV, JSON, etc.  It can also
 be directly inserted into your favorite database, with your favorite perl ORM.
-
-=head1 NAME
-
-Mock::Populate - Mock data creation
 
 =head1 FUNCTIONS
 
@@ -615,7 +611,7 @@ L<Time::Local>
 
 L<Data::Random> does nearly the exact same thing. Whoops!
 
-=head1 TODO
+=head1 TO DO
 
 Implement dirty-data randomizing.
 
